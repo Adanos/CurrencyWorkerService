@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -39,6 +40,20 @@ namespace CurrencyWorkerService.Service
             {
                 var result = await currencyExchange.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<Currency>(result);
+            }
+
+            return null;
+        }
+
+        public async Task<GoldPrice> GetGoldPrice()
+        {
+            var currencyExchange = await _client.GetAsync("api/cenyzlota");
+
+            if (currencyExchange.IsSuccessStatusCode)
+            {
+                var result = await currencyExchange.Content.ReadAsStringAsync();
+                var goldPrices = JsonConvert.DeserializeObject<IList<GoldPrice>>(result);
+                return goldPrices.FirstOrDefault();
             }
 
             return null;

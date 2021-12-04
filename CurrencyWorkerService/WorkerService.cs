@@ -23,6 +23,9 @@ namespace CurrencyWorkerService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                var goldPrice = await _currencyExchangeService.GetGoldPrice();
+                _logger.LogInformation("Worker running at: {time}, date: {date}, price of gold: {goldPrice}",
+                    DateTimeOffset.Now, goldPrice.Date, goldPrice.Price);
                 var currencyExchanges = await _currencyExchangeService.GetCurrencyExchange("usd");
                 var firstCurrencyExchange = currencyExchanges?.Rates.FirstOrDefault();
                 _logger.LogInformation("Worker running at: {time}, currency: {currency}, selling: {selling}", 
