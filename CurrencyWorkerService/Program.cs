@@ -1,16 +1,20 @@
+using CurrencyWorkerService.Model;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using NLog.Web;
 
 namespace CurrencyWorkerService
 {
     public class Program
     {
+        private static IConfiguration Configuration;
         public static void Main(string[] args)
         {
+            Configuration = new ConfigurationBuilder()
+               .AddJsonFile("appsettings.json", true, true)
+               .Build();
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -19,6 +23,12 @@ namespace CurrencyWorkerService
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<WorkerService>();
-                });
+                    services.Configure<NbpApiConfiguration>(Configuration.GetSection("NbpApiConfiguration"));
+                })
+                .ConfigureLogging(logging =>
+                {
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                })
+                .UseNLog();
     }
 }

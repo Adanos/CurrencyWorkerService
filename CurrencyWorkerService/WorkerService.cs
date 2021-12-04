@@ -1,6 +1,8 @@
+using CurrencyWorkerService.Model;
 using CurrencyWorkerService.Service;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Threading;
@@ -13,10 +15,10 @@ namespace CurrencyWorkerService
         private readonly ILogger<WorkerService> _logger;
         private readonly GetCurrencyExchangeService _currencyExchangeService;
 
-        public WorkerService(ILogger<WorkerService> logger)
+        public WorkerService(ILogger<WorkerService> logger, IOptions<NbpApiConfiguration> configuration)
         {
             _logger = logger;
-            _currencyExchangeService = new GetCurrencyExchangeService();
+            _currencyExchangeService = new GetCurrencyExchangeService(configuration);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
