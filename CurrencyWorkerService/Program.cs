@@ -24,6 +24,7 @@ namespace CurrencyWorkerService
                 {
                     services.AddHostedService<WorkerService>();
                     services.Configure<NbpApiConfiguration>(Configuration.GetSection("NbpApiConfiguration"));
+                    services.Configure<CurrencyConfiguration>(Configuration.GetSection("CurrencyConfiguration"));
                 })
                 .ConfigureLogging(logging =>
                 {
